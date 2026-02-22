@@ -276,7 +276,7 @@
 
         @keyframes floatParticle {
             0% { opacity: 0; transform: translateY(100vh) scale(0); }
-            50% { opacity: 0.8; }
+            40% { opacity: 0.8; }
             100% { opacity: 0; transform: translateY(-100px) scale(1); }
         }
 
@@ -461,9 +461,209 @@
             transition: transform 0.5s;
         }
 
+        .about-image video {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+            display: block;
+        }
+
         .about-image:hover img { transform: scale(1.05); }
 
-        .about-image::after {
+        /* Custom Video Player */
+        .custom-player {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #000;
+            cursor: pointer;
+        }
+
+        .custom-player video {
+            width: 100%;
+            max-height: 400px;
+            display: block;
+            object-fit: cover;
+        }
+
+        .player-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.35);
+            transition: opacity 0.4s, visibility 0.4s;
+            z-index: 2;
+        }
+
+        .player-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .play-btn-big {
+            width: 80px;
+            height: 80px;
+            border: none;
+            border-radius: 50%;
+            background: var(--gold);
+            color: var(--dark);
+            font-size: 1.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 40px rgba(198,163,80,0.5), 0 0 80px rgba(198,163,80,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .play-btn-big i {
+            margin-right: -3px;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 40px rgba(198,163,80,0.5), 0 0 80px rgba(198,163,80,0.2); }
+            50% { box-shadow: 0 0 60px rgba(198,163,80,0.7), 0 0 100px rgba(198,163,80,0.3); }
+        }
+
+        .play-btn-big:hover {
+            transform: scale(1.12);
+            box-shadow: 0 0 60px rgba(198,163,80,0.8), 0 0 120px rgba(198,163,80,0.4);
+        }
+
+        .player-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            padding: 30px 16px 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 3;
+            direction: ltr;
+        }
+
+        .custom-player:hover .player-controls,
+        .custom-player.playing .player-controls.show {
+            opacity: 1;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: 10px;
+            transition: height 0.15s;
+        }
+
+        .progress-bar:hover {
+            height: 8px;
+        }
+
+        .progress-filled {
+            height: 100%;
+            background: var(--gold);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .progress-thumb {
+            position: absolute;
+            top: 50%;
+            left: 0%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 14px;
+            height: 14px;
+            background: var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(198,163,80,0.6);
+            transition: transform 0.15s;
+        }
+
+        .progress-bar:hover .progress-thumb {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .controls-right,
+        .controls-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 6px;
+            transition: color 0.2s, background 0.2s;
+        }
+
+        .ctrl-btn:hover {
+            color: var(--gold);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .volume-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            width: 70px;
+            height: 4px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--gold);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: var(--gold);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .time-display {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.78rem;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .about-image:not(:has(.custom-player))::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -472,9 +672,135 @@
             opacity: 0.3;
             transform: translate(-15px, -15px);
             transition: transform 0.3s;
+            pointer-events: none;
         }
 
-        .about-image:hover::after { transform: translate(-8px, -8px); }
+        .about-image:not(:has(.custom-player)):hover::after { transform: translate(-8px, -8px); }
+
+        /* Book Card */
+        .book-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2.5rem 1.5rem;
+            background: linear-gradient(145deg, rgba(16,185,129,0.08), rgba(212,175,55,0.08));
+            border-radius: 20px;
+            border: 1px solid rgba(212,175,55,0.15);
+        }
+
+        .book-cover {
+            position: relative;
+            width: 220px;
+            height: 310px;
+            perspective: 800px;
+        }
+
+        .book-spine {
+            position: absolute;
+            right: 0;
+            top: 5px;
+            bottom: 5px;
+            width: 18px;
+            background: linear-gradient(180deg, var(--emerald), var(--green));
+            border-radius: 0 4px 4px 0;
+            transform: translateX(50%) rotateY(-30deg);
+            transform-origin: left center;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.3);
+            z-index: 0;
+        }
+
+        .book-front {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(160deg, #1a3a2a 0%, #0d1f17 50%, #1a3a2a 100%);
+            border-radius: 4px 12px 12px 4px;
+            border: 2px solid rgba(212,175,55,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 5px 8px 25px rgba(0,0,0,0.4), inset 0 0 30px rgba(212,175,55,0.05);
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+
+        .book-cover:hover .book-front {
+            transform: rotateY(-8deg);
+            box-shadow: 10px 12px 35px rgba(0,0,0,0.5), inset 0 0 30px rgba(212,175,55,0.08);
+        }
+
+        .book-badge {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold), #c9a030);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(212,175,55,0.3);
+        }
+
+        .book-title {
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 0.4rem;
+            line-height: 1.6;
+        }
+
+        .book-subtitle {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .book-authors {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            border-top: 1px solid rgba(212,175,55,0.2);
+            padding-top: 0.8rem;
+            width: 100%;
+        }
+
+        .book-year {
+            font-size: 0.75rem;
+            color: var(--gold);
+            margin-top: 0.5rem;
+            opacity: 0.7;
+        }
+
+        .book-download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.9rem 2rem;
+            background: linear-gradient(135deg, var(--emerald), var(--green));
+            color: #fff;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+        }
+
+        .book-download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16,185,129,0.4);
+        }
+
+        .book-download-btn i {
+            font-size: 1.2rem;
+        }
 
         .about-text h2 {
             font-size: 2.2rem;
@@ -658,7 +984,7 @@
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(2, 250px);
+            grid-template-rows: 250px 250px 280px;
             gap: 1rem;
         }
 
@@ -671,6 +997,8 @@
 
         .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
         .gallery-item:nth-child(4) { grid-column: span 2; }
+        .gallery-item:nth-child(5) { grid-column: span 2; }
+        .gallery-item:nth-child(6) { grid-column: span 2; }
 
         .gallery-item img {
             width: 100%;
@@ -679,7 +1007,39 @@
             transition: transform 0.5s;
         }
 
-        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-item:hover img,
+        .gallery-item:hover video { transform: scale(1.1); }
+
+        .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .gallery-item .video-play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            width: 60px;
+            height: 60px;
+            background: rgba(0,0,0,0.55);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.5rem;
+            pointer-events: none;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .gallery-item:hover .video-play-icon {
+            background: rgba(var(--emerald-rgb, 16,185,129),0.8);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
 
         .gallery-item::after {
             content: '';
@@ -1043,7 +1403,8 @@
 
         .lightbox.active { display: flex; }
 
-        .lightbox img {
+        .lightbox img,
+        .lightbox video {
             max-width: 90%;
             max-height: 90vh;
             border-radius: 12px;
@@ -1070,10 +1431,12 @@
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .gallery-grid {
                 grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(3, 200px);
+                grid-template-rows: repeat(3, 200px) 220px;
             }
             .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 1; }
             .gallery-item:nth-child(4) { grid-column: span 1; }
+            .gallery-item:nth-child(5) { grid-column: span 1; }
+            .gallery-item:nth-child(6) { grid-column: span 1; }
         }
 
         @media (max-width: 768px) {
@@ -1131,6 +1494,8 @@
                 grid-column: span 1;
             }
 
+            .gallery-item:nth-child(5),
+            .gallery-item:nth-child(6) { grid-column: span 1; }
             .gallery-item { height: 150px; }
 
             .hero-bismillah { font-size: 1.8rem; }
@@ -1256,9 +1621,38 @@
         <div class="container">
             <div class="about-grid">
                 <div class="about-image reveal">
-                    <img src="https://ebook.storage.iran.liara.space/photo24366650492.jpg"
-                         alt="مؤسسه فرهنگی قرآن و عطرت حافظان یاس نبی(س)"
-                         loading="lazy">
+                    <div class="custom-player" id="customPlayer">
+                        <video id="aboutVideo"
+                               src="https://ebook.storage.iran.liara.space/964c467b-eab4-438e-b287-f3930ecdd8f4.mp4"
+                               playsinline
+                               preload="metadata"
+                               poster="https://ebook.storage.iran.liara.space/photo24366650492.jpg">
+                        </video>
+                        <div class="player-overlay" id="playerOverlay">
+                            <button class="play-btn-big" id="playBtnBig">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                        <div class="player-controls" id="playerControls">
+                            <div class="progress-bar" id="progressBar">
+                                <div class="progress-filled" id="progressFilled"></div>
+                                <div class="progress-thumb" id="progressThumb"></div>
+                            </div>
+                            <div class="controls-row">
+                                <div class="controls-right">
+                                    <button class="ctrl-btn" id="playPauseBtn"><i class="fas fa-play"></i></button>
+                                    <div class="volume-wrapper">
+                                        <button class="ctrl-btn" id="muteBtn"><i class="fas fa-volume-up"></i></button>
+                                        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1">
+                                    </div>
+                                    <span class="time-display" id="timeDisplay">۰۰:۰۰ / ۰۰:۰۰</span>
+                                </div>
+                                <div class="controls-left">
+                                    <button class="ctrl-btn" id="fullscreenBtn"><i class="fas fa-expand"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="about-text reveal">
                     <div class="section-label">
@@ -1447,6 +1841,18 @@
                     <img src="https://ebook.storage.iran.liara.space/photo24366540582.jpg"
                          alt="فعالیت‌های مؤسسه" loading="lazy">
                     <div class="gallery-item-label">فعالیت‌های مؤسسه</div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)" data-type="video">
+                    <video src="https://ebook.storage.iran.liara.space/964c467b-eab4-438e-b287-f3930ecdd8f4.mp4"
+                           muted preload="metadata" loading="lazy"></video>
+                    <div class="video-play-icon"><i class="fas fa-play"></i></div>
+                    <div class="gallery-item-label">ویدیو مؤسسه</div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)" data-type="video">
+                    <video src="https://ebook.storage.iran.liara.space/b04ce11c-2752-4c97-ae4a-23ee1a8bc75b.mp4"
+                           muted preload="metadata" loading="lazy"></video>
+                    <div class="video-play-icon"><i class="fas fa-play"></i></div>
+                    <div class="gallery-item-label">ویدیو فعالیت‌ها</div>
                 </div>
             </div>
         </div>
@@ -1657,6 +2063,7 @@
     <div class="lightbox" id="lightbox" onclick="closeLightbox()">
         <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
         <img src="" alt="Lightbox image" id="lightboxImg">
+        <video src="" id="lightboxVideo" controls style="display:none" onclick="event.stopPropagation()"></video>
     </div>
 
     <script>
@@ -1743,8 +2150,8 @@
             const p = document.createElement('div');
             p.classList.add('particle');
             p.style.left = Math.random() * 100 + '%';
-            p.style.animationDelay = Math.random() * 6 + 's';
-            p.style.animationDuration = (3 + Math.random() * 4) + 's';
+            p.style.animationDelay = Math.random() * 8 + 's';
+            p.style.animationDuration = (8 + Math.random() * 7) + 's';
             const size = (2 + Math.random() * 5);
             p.style.width = p.style.height = size + 'px';
             particlesContainer.appendChild(p);
@@ -1752,13 +2159,30 @@
 
         // Lightbox
         function openLightbox(el) {
-            const img = el.querySelector('img');
-            document.getElementById('lightboxImg').src = img.src;
+            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxVideo = document.getElementById('lightboxVideo');
+            if (el.dataset.type === 'video') {
+                const video = el.querySelector('video');
+                lightboxImg.style.display = 'none';
+                lightboxVideo.style.display = '';
+                lightboxVideo.src = video.src;
+                lightboxVideo.currentTime = 0;
+                lightboxVideo.play();
+            } else {
+                const img = el.querySelector('img');
+                lightboxVideo.style.display = 'none';
+                lightboxVideo.pause();
+                lightboxImg.style.display = '';
+                lightboxImg.src = img.src;
+            }
             document.getElementById('lightbox').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeLightbox() {
+            const lightboxVideo = document.getElementById('lightboxVideo');
+            lightboxVideo.pause();
+            lightboxVideo.src = '';
             document.getElementById('lightbox').classList.remove('active');
             document.body.style.overflow = '';
         }
@@ -1783,6 +2207,119 @@
                 card.style.transform = '';
             });
         });
+
+        // Custom Video Player
+        (() => {
+            const player = document.getElementById('customPlayer');
+            const video = document.getElementById('aboutVideo');
+            const overlay = document.getElementById('playerOverlay');
+            const playBtnBig = document.getElementById('playBtnBig');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const muteBtn = document.getElementById('muteBtn');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const progressBar = document.getElementById('progressBar');
+            const progressFilled = document.getElementById('progressFilled');
+            const progressThumb = document.getElementById('progressThumb');
+            const timeDisplay = document.getElementById('timeDisplay');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const controls = document.getElementById('playerControls');
+
+            const toFa = n => n.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+            const fmt = s => {
+                const m = Math.floor(s / 60);
+                const sec = Math.floor(s % 60);
+                return toFa(String(m).padStart(2,'0')) + ':' + toFa(String(sec).padStart(2,'0'));
+            };
+
+            let hideTimer;
+            const showControls = () => {
+                controls.classList.add('show');
+                clearTimeout(hideTimer);
+                hideTimer = setTimeout(() => {
+                    if (!video.paused) controls.classList.remove('show');
+                }, 3000);
+            };
+
+            function togglePlay() {
+                if (video.paused) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+            }
+
+            playBtnBig.addEventListener('click', e => { e.stopPropagation(); togglePlay(); });
+            playPauseBtn.addEventListener('click', e => { e.stopPropagation(); togglePlay(); });
+            video.addEventListener('click', togglePlay);
+
+            video.addEventListener('play', () => {
+                player.classList.add('playing');
+                overlay.classList.add('hidden');
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                showControls();
+            });
+
+            video.addEventListener('pause', () => {
+                player.classList.remove('playing');
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                controls.classList.add('show');
+                if (video.currentTime >= video.duration - 0.5) {
+                    overlay.classList.remove('hidden');
+                    playBtnBig.innerHTML = '<i class="fas fa-redo"></i>';
+                }
+            });
+
+            video.addEventListener('ended', () => {
+                overlay.classList.remove('hidden');
+                playBtnBig.innerHTML = '<i class="fas fa-redo"></i>';
+            });
+
+            video.addEventListener('timeupdate', () => {
+                const pct = (video.currentTime / video.duration) * 100 || 0;
+                progressFilled.style.width = pct + '%';
+                progressThumb.style.left = pct + '%';
+                timeDisplay.textContent = fmt(video.currentTime) + ' / ' + fmt(video.duration || 0);
+            });
+
+            progressBar.addEventListener('click', e => {
+                const rect = progressBar.getBoundingClientRect();
+                const pct = (e.clientX - rect.left) / rect.width;
+                video.currentTime = pct * video.duration;
+            });
+
+            muteBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                video.muted = !video.muted;
+                muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+                volumeSlider.value = video.muted ? 0 : video.volume;
+            });
+
+            volumeSlider.addEventListener('input', e => {
+                e.stopPropagation();
+                video.volume = e.target.value;
+                video.muted = video.volume === 0;
+                muteBtn.innerHTML = video.volume === 0 ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+            });
+
+            fullscreenBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                if (!document.fullscreenElement) {
+                    player.requestFullscreen();
+                    fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+                } else {
+                    document.exitFullscreen();
+                    fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                }
+            });
+
+            document.addEventListener('fullscreenchange', () => {
+                if (!document.fullscreenElement) {
+                    fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                }
+            });
+
+            player.addEventListener('mousemove', showControls);
+        })();
 
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
